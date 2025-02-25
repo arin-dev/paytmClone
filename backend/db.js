@@ -9,7 +9,7 @@ const express = require("express");
 const app = express();
 
 // Connect to MongoDB
-MONGO_URL =  process.env.MONGO_URL;
+const MONGO_URL =  process.env.MONGO_URL;
 mongoose.connect(MONGO_URL, {
 //   useNewUrlParser: true,
 //   useUnifiedTopology: true,
@@ -19,19 +19,34 @@ mongoose.connect(MONGO_URL, {
 
 // Define a schema
 const userSchema = new mongoose.Schema({
-  username: String,
-//   email: String,
-  password: String,
-  fistName: String,
-  lastName: String
+  username: { type: String, required: true },
+  // email: { type: String, required: true },
+  password: { type: String, required: true },
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true }
 });
 
 // Create a model
 const User = mongoose.model("User", userSchema);
 
-// ... existing code ...
+const userAccountSchema = new mongoose.Schema({
+  userId: {
+      type: mongoose.Schema.Types.ObjectId, // Reference to User model
+      ref: 'User',
+      required: true
+  },
+  balance: {
+      type: Number,
+      required: true
+  }
+});
+
+const userAccount = mongoose.model('Account', userAccountSchema);
+
+
 module.exports = {
-    User
+  User,
+  userAccount,
 }
 
 // app.listen(3000, () => {
